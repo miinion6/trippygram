@@ -19,7 +19,7 @@ APP_ID = int(os.environ.get("APP_ID", "5166878"))
 API_HASH = os.environ.get("API_HASH", "fdafb41f9a67f40e34a6c67f47730a92")
 
 #Your db channel Id
-CHANNEL_ID = int(os.environ.get("CHANNEL_ID", "1002260808175"))
+CHANNEL_ID = int(os.environ.get("CHANNEL_ID", "-1002260808175"))
 
 # NAMA OWNER
 OWNER = os.environ.get("OWNER", "iBOXTVADS")
