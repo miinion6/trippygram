@@ -75,22 +75,6 @@ class Bot(Client):
 
         self.set_parse_mode(ParseMode.HTML)
         self.LOGGER(__name__).info(f"Bot Running..!\n\nCreated by \nhttps://t.me/iBox_TV")
-        self.LOGGER(__name__).info(f""" \n\n       
-                                                   
-                  
-                                 
-
-  ___ ___  ___  ___ ___ _    _____  _____  ___ _____ ___ 
- / __/ _ \|   \| __| __| |  |_ _\ \/ / _ )/ _ \_   _/ __|
-| (_| (_) | |) | _|| _|| |__ | | >  <| _ \ (_) || | \__ \
- \___\___/|___/|___|_| |____|___/_/\_\___/\___/ |_| |___/
-                                                         
- 
-                                                                        
-                                                                      
-                                                                                 
-                              
-                                          """)
         self.username = usr_bot_me.username
         #web-response
         app = web.AppRunner(await web_server())
