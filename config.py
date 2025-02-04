@@ -7,6 +7,11 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 
+# Existing variables...
+BOT_USERNAME = os.environ.get("BOT_USERNAME", "your_default_bot_username")
+
+# Add this new variable:
+HEROKU_APP_URL = os.environ.get("HEROKU_APP_URL", f"https://{os.environ.get('HEROKU_APP_NAME')}.herokuapp.com")
 
 
 #Bot token @Botfather
