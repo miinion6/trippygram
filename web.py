@@ -1,17 +1,20 @@
 import os
 from aiohttp import web
 
-# Retrieve your bot's username from environment variables.
+# Get the bot's username from the environment.
 BOT_USERNAME = os.environ.get("BOT_USERNAME", "default_bot_username")
 
 async def index(request):
-    # Check for the 'start' query parameter
+    # Log the incoming URL for debugging.
+    print("Incoming request:", request.rel_url)
+    # Try to retrieve the 'start' query parameter.
     start_param = request.rel_url.query.get("start")
+    
     if start_param:
-        # Build the Telegram deep link, e.g., tg://resolve?domain=MyBot&start=...
+        # Build the Telegram deep-link.
         deep_link = f"tg://resolve?domain={BOT_USERNAME}&start={start_param}"
         
-        # Create an HTML page that redirects to Telegram and then attempts to close the window.
+        # Build an HTML page that attempts to redirect to Telegram and auto-close.
         html_content = f"""<!DOCTYPE html>
 <html>
   <head>
@@ -37,14 +40,16 @@ async def index(request):
 </html>"""
         return web.Response(text=html_content, content_type="text/html")
     else:
-        # Fallback response if no start parameter is provided
+        # Fallback response when no 'start' parameter is found.
         return web.Response(text="Codeflix FileStore", content_type="text/plain")
 
-# Use a catch-all route so that any GET request (with or without a trailing slash) is handled.
+# Create the application and register routes:
 app = web.Application()
+# Explicitly register the root route.
+app.router.add_get("/", index)
+# Also register a catch-all route to handle requests that might not include the trailing slash.
 app.router.add_get("/{tail:.*}", index)
 
 if __name__ == '__main__':
-    # Railway (like Heroku) sets the PORT via an environment variable.
     port = int(os.environ.get("PORT", 8080))
     web.run_app(app, host="0.0.0.0", port=port)
