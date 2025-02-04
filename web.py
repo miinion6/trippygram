@@ -1,23 +1,23 @@
 import os
 from aiohttp import web
 
-# Get the bot's username from environment variables.
+# Retrieve the bot's username from the environment.
+# Ensure you set BOT_USERNAME (without the '@') in your Railway project settings.
 BOT_USERNAME = os.environ.get("BOT_USERNAME", "default_bot_username")
 
 async def index(request):
-    # Log the full URL, path, and query parameters for debugging.
+    # Debug logging: log the full URL, path, and query parameters.
     full_url = str(request.url)
     path = request.path
     query_params = dict(request.query)
     print("DEBUG: Full URL:", full_url)
     print("DEBUG: Path:", path)
-    print("DEBUG: Query params:", query_params)
+    print("DEBUG: Query Params:", query_params)
     
-    # Look for the 'start' query parameter.
+    # Get the 'start' query parameter.
     start_param = request.query.get("start")
-    
     if start_param:
-        # Build the Telegram deep-link.
+        # Build the Telegram deep-link URL.
         deep_link = f"tg://resolve?domain={BOT_USERNAME}&start={start_param}"
         
         # Build an HTML page that attempts to redirect to Telegram and then close the window.
@@ -40,23 +40,26 @@ async def index(request):
     </script>
   </head>
   <body>
-    <p>Redirecting to Telegram… If nothing happens, <a href="{deep_link}">click here</a> to open Telegram.</p>
+    <p>Redirecting to Telegram… If nothing happens, <a href="{deep_link}">click here</a>.</p>
     <p>If the window does not close automatically, please close it manually.</p>
   </body>
 </html>"""
         return web.Response(text=html_content, content_type="text/html")
     else:
-        # If no 'start' parameter is found, return the fallback along with debugging info.
+        # If no 'start' parameter is found, return a simple debug message.
         return web.Response(
             text=f"No 'start' parameter found.\nPath: {path}\nQuery: {query_params}",
             content_type="text/plain"
         )
 
-# Register both the explicit root and a catch-all route.
+# Create the aiohttp application and register routes.
 app = web.Application()
+# Register the root route explicitly.
 app.router.add_get("/", index)
+# Also register a catch-all route to handle any path (ensuring that missing trailing slashes aren’t an issue).
 app.router.add_get("/{tail:.*}", index)
 
 if __name__ == '__main__':
+    # Railway will supply the PORT via an environment variable.
     port = int(os.environ.get("PORT", 8080))
     web.run_app(app, host="0.0.0.0", port=port)
